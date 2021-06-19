@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"fmt"
+	"os"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -142,6 +144,8 @@ type SplitStore struct {
 
 	ctx    context.Context
 	cancel func()
+
+	mlog *os.File
 }
 
 var _ bstore.Blockstore = (*SplitStore)(nil)
@@ -176,6 +180,11 @@ func Open(path string, ds dstore.Datastore, hot, cold bstore.Blockstore, cfg *Co
 	}
 
 	ss.ctx, ss.cancel = context.WithCancel(context.Background())
+
+	ss.mlog, err = os.OpenFile("/tmp/splitstore-move.log", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return nil, xerrors.Errorf("error opening move log: %w", err)
+	}
 
 	return ss, nil
 }
@@ -428,7 +437,7 @@ func (s *SplitStore) Close() error {
 	}
 
 	s.cancel()
-	return multierr.Combine(s.tracker.Close(), s.env.Close())
+	return multierr.Combine(s.tracker.Close(), s.env.Close(), s.mlog.Close())
 }
 
 func (s *SplitStore) HeadChange(_, apply []*types.TipSet) error {
@@ -828,6 +837,12 @@ func (s *SplitStore) doCompact(curTs *types.TipSet, syncGapEpoch abi.ChainEpoch)
 		// it's cold, mark it for move
 		cold = append(cold, cid)
 		coldCnt++
+
+		_, err = fmt.Fprintf(s.mlog, "%d %s %d\n", currentEpoch, cid, writeEpoch)
+		if err != nil {
+			log.Errorf("error writing move log for %s: %s", cid, err)
+		}
+
 		return nil
 	})
 
