@@ -171,8 +171,12 @@ func (b *PreCommitBatcher) maybeStartBatch(notif, after bool) ([]sealiface.PreCo
 		return nil, xerrors.Errorf("getting config: %w", err)
 	}
 
-	if notif && total < cfg.MaxPreCommitBatch {
-		return nil, nil
+	if notif {
+		if total < cfg.MaxPreCommitBatch {
+			return nil, nil
+		}
+
+		log.Info("processing batch: queued more than Max")
 	}
 
 	if after && total < cfg.MinPreCommitBatch {
