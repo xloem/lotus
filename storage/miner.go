@@ -10,7 +10,6 @@ import (
 	"github.com/ipfs/go-cid"
 	"github.com/ipfs/go-datastore"
 	logging "github.com/ipfs/go-log/v2"
-	"github.com/libp2p/go-libp2p-core/host"
 	"golang.org/x/xerrors"
 
 	"github.com/filecoin-project/go-address"
@@ -50,9 +49,9 @@ var log = logging.Logger("storageminer")
 //
 // Miner#Run starts the sealing FSM.
 type Miner struct {
-	api     fullNodeFilteredAPI
-	feeCfg  config.MinerFeeConfig
-	h       host.Host
+	api    fullNodeFilteredAPI
+	feeCfg config.MinerFeeConfig
+	//h       host.Host
 	sealer  sectorstorage.SectorManager
 	ds      datastore.Batching
 	sc      sealing.SectorIDCounter
@@ -130,7 +129,6 @@ type fullNodeFilteredAPI interface {
 // NewMiner creates a new Miner object.
 func NewMiner(api fullNodeFilteredAPI,
 	maddr address.Address,
-	h host.Host,
 	ds datastore.Batching,
 	sealer sectorstorage.SectorManager,
 	sc sealing.SectorIDCounter,
@@ -143,7 +141,6 @@ func NewMiner(api fullNodeFilteredAPI,
 	m := &Miner{
 		api:     api,
 		feeCfg:  feeCfg,
-		h:       h,
 		sealer:  sealer,
 		ds:      ds,
 		sc:      sc,

@@ -218,7 +218,7 @@ func StorageMiner(fc config.MinerFeeConfig) func(params StorageMinerParams) (*st
 			lc     = params.Lifecycle
 			api    = params.API
 			sealer = params.Sealer
-			h      = params.Host
+			//h      = params.Host
 			sc     = params.SectorIDCounter
 			verif  = params.Verifier
 			prover = params.Prover
@@ -239,7 +239,8 @@ func StorageMiner(fc config.MinerFeeConfig) func(params StorageMinerParams) (*st
 			return nil, err
 		}
 
-		sm, err := storage.NewMiner(api, maddr, h, ds, sealer, sc, verif, prover, gsd, fc, j, as)
+		sm, err := storage.NewMiner(api, maddr, ds, sealer, sc, verif, prover, gsd, fc, j, as)
+		//sm, err := storage.NewMiner(api, maddr, h, ds, sealer, sc, verif, prover, gsd, fc, j, as)
 		if err != nil {
 			return nil, err
 		}
