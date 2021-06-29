@@ -13,7 +13,7 @@ The [Lotus user documentation](https://docs.filecoin.io/get-started/lotus) is pa
 * To install and get started with Lotus, visit the [Get Started section](https://docs.filecoin.io/get-started/lotus).
 * Information about how to perform deals on the Filecoin network using Lotus can be found  in the [Store section](https://docs.filecoin.io/store/lotus).
 * Miners looking to provide storage to the Network can find the latest guides in the [Mine section](https://docs.filecoin.io/mine/lotus).
-* Developers and integrators that wish to use the Lotus APIs can start in the [Build section](https://docs.filecoin.io/mine/lotus).
+* Developers and integrators that wish to use the Lotus APIs can start in the [Build section](https://docs.filecoin.io/build/lotus).
 
 For more details about Filecoin, check out the [Filecoin Docs](https://docs.filecoin.io) and [Filecoin Spec](https://spec.filecoin.io/).
 
